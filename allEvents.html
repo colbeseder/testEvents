@@ -1,0 +1,46 @@
+<span><span id="counter"></span> events found</span><br>
+<span>Right-click to save list of events:</span><br>
+<a id="saveLink" download='events.txt' href="">events.txt</a>
+<br>
+<textarea id="output" cols=150 rows=20 >
+</textarea>
+
+
+<script src="./scripts/getEvents.js"> </script>
+
+<script>
+//Browser detect
+var browser = (function (agent) {
+    switch (true) {
+        case agent.indexOf("edge") > -1: return "edge";
+        case agent.indexOf("edg") > -1: return "edge";
+        case agent.indexOf("opr") > -1 && !!window.opr: return "opera";
+        case agent.indexOf("chrome") > -1 && !!window.chrome: return "chrome";
+        case agent.indexOf("trident") > -1: return "ie";
+        case agent.indexOf("firefox") > -1: return "firefox";
+        case agent.indexOf("safari") > -1: return "safari";
+        default: return "other";
+    }
+})(window.navigator.userAgent.toLowerCase());
+</script>
+
+<script>
+var result = getEvents(filter='window');
+console.log(result);
+eventSet = new Set();
+for (var k in result) {
+    let c = result[k];
+    for (var i = 0; i < c.length; i++) {
+        eventSet.add(c[i])
+    }
+}
+
+var evs = eventSet;
+
+document.getElementById("counter").innerHTML = Array.from(evs).length;
+document.getElementById("output").innerHTML = Array.from(evs).join("\n");
+var saveLink = document.getElementById("saveLink");
+saveLink.innerText = browser + "_events.txt"
+saveLink.download = browser + "_events.txt"
+saveLink.href = "data:text/plain;base64," + btoa(Array.from(evs).join("\n"));
+</script>

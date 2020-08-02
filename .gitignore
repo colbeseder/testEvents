@@ -1,7 +1,3 @@
-*.ss~
-*.ss#*
-.#*.ss
+*.cmd
 
-*.scm~
-*.scm#*
-.#*.scm
+pvt/*
