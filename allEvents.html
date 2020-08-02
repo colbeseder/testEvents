@@ -1,4 +1,4 @@
-<span><span id="counter"></span> events found</span><br>
+<span><span id="counter"></span> events found. <span id="prev"></span></span><br>
 <span>Right-click to save list of events:</span><br>
 <a id="saveLink" download='events.txt' href="">events.txt</a>
 <br>
@@ -25,9 +25,14 @@ var browser = (function (agent) {
 </script>
 
 <script>
+
+var eventsFileName = browser + "_events.txt";
+
+
+/* Get full list of element events */
 var result = getEvents(filter='window');
 console.log(result);
-eventSet = new Set();
+var eventSet = new Set();
 for (var k in result) {
     let c = result[k];
     for (var i = 0; i < c.length; i++) {
@@ -35,12 +40,16 @@ for (var k in result) {
     }
 }
 
-var evs = eventSet;
+/* Get previous list */
+fetch("out/" + eventsFileName)
+	.then(response => response.text())
+	.then(data => document.getElementById("prev").innerText = "Previous count: " + data.split(/\s+/).length)
 
-document.getElementById("counter").innerHTML = Array.from(evs).length;
-document.getElementById("output").innerHTML = Array.from(evs).join("\n");
+/* Update page */
+document.getElementById("counter").innerText = Array.from(eventSet).length;
+document.getElementById("output").innerHTML = Array.from(eventSet).join("\n");
 var saveLink = document.getElementById("saveLink");
-saveLink.innerText = browser + "_events.txt"
-saveLink.download = browser + "_events.txt"
-saveLink.href = "data:text/plain;base64," + btoa(Array.from(evs).join("\n"));
+saveLink.innerText = eventsFileName;
+saveLink.download = eventsFileName;
+saveLink.href = "data:text/plain;base64," + btoa(Array.from(eventSet).join("\n"));
 </script>
