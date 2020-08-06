@@ -2,11 +2,19 @@ import os
 import json
 from flask import Flask, request, jsonify
 
+print("Go!")
+
 server = Flask(__name__) #, static_url_path='/static', static_folder='src/static')
 
 @server.route("/")
 def hello():
+    print(">1")
     return server.send_static_file('./index.html')
+
+@server.route("/t")
+def t():
+    print(">2")
+    return "test"
 
 @server.route("/scripts/getEvents.js")
 def a():
@@ -19,7 +27,7 @@ def events():
 
     browser = request.args['browser']
     resp = {"browser": browser, "events":[], "logs":""}
-    events_path = 'src/browser_events/%s_events.json'%(browser)
+    events_path = './browser_events/%s_events.json'%(browser)
     if not os.path.isfile(events_path):
         resp["logs"] = "no events file found for this browser"
         return json.dumps(resp)
@@ -38,7 +46,7 @@ def b():
         return '{"error":"No browser provided"}'
     browser = request.args['browser']
     resp = {"logs":""}
-    events_path = 'src/browser_events/%s_events.json'%(browser)
+    events_path = './browser_events/%s_events.json'%(browser)
 
     with open(events_path, 'w') as f:
         pass
@@ -47,5 +55,5 @@ def b():
     return json.dumps(resp)
 
 if __name__ == "__main__":
-    server.run()
+    server.run(host='0.0.0.0')
 
