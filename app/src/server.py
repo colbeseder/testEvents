@@ -19,7 +19,7 @@ def events():
 
     browser = request.args['browser']
     resp = {"browser": browser, "events":[], "logs":""}
-    events_path = 'src/browser_events/%s_events.txt'%(browser)
+    events_path = 'src/browser_events/%s_events.json'%(browser)
     if not os.path.isfile(events_path):
         resp["logs"] = "no events file found for this browser"
         return json.dumps(resp)
@@ -38,7 +38,7 @@ def b():
         return '{"error":"No browser provided"}'
     browser = request.args['browser']
     resp = {"logs":""}
-    events_path = 'src/browser_events/%s_events.txt'%(browser)
+    events_path = 'src/browser_events/%s_events.json'%(browser)
 
     with open(events_path, 'w') as f:
         pass
