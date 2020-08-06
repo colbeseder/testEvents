@@ -25,7 +25,7 @@ def events():
         return json.dumps(resp)
     
     with open(events_path, 'r') as f:
-        resp["events"] = [line.strip() for line in f.readlines() ]
+        resp["events"] = json.load(f)
     
     os.system("ls")
     return json.dumps(resp)

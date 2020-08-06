@@ -41,6 +41,8 @@ for (var k in result) {
 }
 
 function findNewEvents(found, old){
+	console.log('old');
+	console.log(old);
 	var newEvents = [];
 	for (let item of found){
 		if (old.indexOf(item) === -1){
