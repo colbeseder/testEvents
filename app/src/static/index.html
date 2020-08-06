@@ -1,4 +1,4 @@
-<span><span id="counter"></span> events found. <span id="prev"></span></span><br>
+<span><span id="counter"></span> events found. <span id="prev"></span><br><span id="newEvents"></span></span><br>
 <span>Right-click to save list of events:</span><br>
 <a id="saveLink" download='events.txt' href="">events.txt</a>
 <br>
@@ -40,10 +40,36 @@ for (var k in result) {
     }
 }
 
+function findNewEvents(found, old){
+	var newEvents = [];
+	for (let item of found){
+		if (old.indexOf(item) === -1){
+			newEvents.push(item);
+		}
+	}
+	return newEvents;
+}
+
+function handleNew(resp){
+	var newEvents = findNewEvents(eventSet, resp.events)
+	document.getElementById("newEvents").innerText = "New Events: " + JSON.stringify(newEvents);
+	postEvents();
+	return resp;
+}
+
+function postEvents(){
+	var xhr = new XMLHttpRequest();
+	var mimeType = "application/json";  
+	xhr.open('PUT', "/api/v1/events?browser=" + browser);
+	xhr.setRequestHeader('Content-Type', mimeType);  
+	xhr.send(JSON.stringify(Array.from(eventSet).sort()));
+}
+
 /* Get previous list */
-fetch("out/" + eventsFileName)
-	.then(response => response.text())
-	.then(data => document.getElementById("prev").innerText = "Previous count: " + data.split(/\s+/).length)
+fetch("/api/v1/events?browser=" + browser)
+	.then(response => response.json())
+	.then(handleNew)
+	.then(data => document.getElementById("prev").innerText = "Previous count: " + data.events.length)
 
 /* Update page */
 document.getElementById("counter").innerText = Array.from(eventSet).length;
