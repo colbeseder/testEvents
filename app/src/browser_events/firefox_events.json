@@ -13,6 +13,7 @@
     "canplay",
     "canplaythrough",
     "change",
+    "click",
     "close",
     "contextmenu",
     "cuechange",
